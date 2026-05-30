@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certifications — Chris Riley</title>
+<meta name="description" content="Anthropic Academy certifications — Chris Riley">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0e;
+    --surface: rgba(22, 22, 30, 0.55);
+    --border: rgba(255, 255, 255, 0.07);
+    --border-hover: rgba(74, 158, 255, 0.35);
+    --blue: #4a9eff;
+    --blue-glow: rgba(74, 158, 255, 0.12);
+    --brass: #c9a54e;
+    --brass-glow: rgba(201, 165, 78, 0.12);
+    --green: #4ade80;
+    --text: #e6e3dc;
+    --text-soft: #8b8a86;
+    --text-mute: #54524e;
+    --white: #f4f1ea;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 16px; line-height: 1.65; font-weight: 300;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  body::before {
+    content: ''; position: fixed; top: -200px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--blue-glow) 0%, transparent 65%);
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: ''; position: fixed; bottom: -250px; right: -150px;
+    width: 550px; height: 550px;
+    background: radial-gradient(circle, var(--brass-glow) 0%, transparent 65%);
+    pointer-events: none; z-index: 0;
+  }
+  ::selection { background: var(--blue); color: var(--bg); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+  /* Header */
+  .back-nav {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .back-link {
+    font-family: var(--mono); font-size: 13px; color: var(--text-soft);
+    text-decoration: none; transition: color 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .back-link:hover { color: var(--blue); }
+  .back-link svg { width: 14px; height: 14px; }
+
+  /* Page header */
+  .page-header {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-family: var(--serif); font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600; color: var(--white); margin-bottom: 12px;
+  }
+  .page-header p {
+    font-size: 16px; color: var(--text-soft); max-width: 640px;
+    font-weight: 300; line-height: 1.7;
+  }
+  .cert-count {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 12px; color: var(--green);
+    margin-top: 16px;
+  }
+  .cert-count::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); display: inline-block;
+  }
+
+  /* Tiers */
+  .tier {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tier:last-child { border-bottom: none; }
+  .tier-label {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--brass);
+    margin-bottom: 28px; display: flex; align-items: center; gap: 14px;
+  }
+  .tier-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--brass-glow), transparent);
+  }
+
+  /* Cert cards */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .cert-card {
+    background: var(--surface);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .cert-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+  .cert-name {
+    font-family: var(--mono); font-size: 14px; font-weight: 500;
+    color: var(--white); margin-bottom: 4px; line-height: 1.4;
+  }
+  .cert-org {
+    font-size: 12px; color: var(--text-mute); margin-bottom: 16px;
+    font-weight: 300;
+  }
+  .cert-actions {
+    display: flex; gap: 16px; align-items: center;
+  }
+  .cert-link {
+    font-family: var(--mono); font-size: 11px; color: var(--text-soft);
+    text-decoration: none; transition: color 0.2s;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .cert-link:hover { color: var(--blue); }
+  .cert-link.verify { color: var(--blue); }
+  .cert-link.verify:hover { color: var(--white); }
+  .cert-link svg { width: 12px; height: 12px; }
+
+  /* Footer */
+  .gallery-footer {
+    padding: 48px 0;
+    text-align: center;
+  }
+  .gallery-footer p {
+    font-family: var(--mono); font-size: 11px; color: var(--text-mute);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 22px; }
+    .cert-grid { grid-template-columns: 1fr; }
+    .page-header { padding: 48px 0 32px; }
+    .tier { padding: 40px 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="back-nav">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portfolio
+    </a>
+  </nav>
+
+  <header class="page-header">
+    <h1>Anthropic Academy</h1>
+    <p>Full certification stack spanning AI foundations, multi-cloud deployment, developer tooling, and advanced agentic architecture. All completed April 2026.</p>
+    <div class="cert-count">17 of 17 verified</div>
+  </header>
+
+  <!-- FOUNDATION & AI FLUENCY -->
+  <section class="tier">
+    <div class="tier-label">Foundation & AI Fluency</div>
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-name">Claude 101</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/78vqmpof34ah" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Claude101.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">AI Fluency: Framework & Foundations</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/26r7oz52ca2d" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/AI-Fluency.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">AI Fluency: AI Capabilities & Limitations</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/z2mx4tjy32o8" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Capabilities-Limitations.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Teaching the AI Fluency Framework</div>
+        <div class="cert-org">Co-credentialed: University College Cork · Ringling College · HEA Ireland</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/9v62hv8x4fc4" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Teaching-AI-Fluency.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">AI Fluency for Educators</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/pavwnn6b2xhb" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/AI-Fluency-Educators.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">AI Fluency for Students</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/9dzr692r9e88" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/AI-Fluency-Students.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">AI Fluency for Nonprofits</div>
+        <div class="cert-org">Co-credentialed: GivingTuesday</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/2gv55c7tytp9" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/NonProfits.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- API & CLOUD DEPLOYMENT -->
+  <section class="tier">
+    <div class="tier-label">API & Cloud Deployment</div>
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-name">Claude with the Anthropic API</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/ow3tmci3a59d" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Anthropic-API.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Claude with Amazon Bedrock</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/nts6cfwb9axy" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Amazon-Bedrock.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Claude with Google Vertex AI</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/tgrqkbvu4vqx" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/VertexAI.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CLAUDE CODE & TOOLS -->
+  <section class="tier">
+    <div class="tier-label">Claude Code & Tools</div>
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-name">Claude Code 101</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/6msdevteo78c" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Claude-Code101.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Claude Code in Action</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/y5ndhizjxuzn" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/ClaudeCode-in-Action.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Introduction to Claude Cowork</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/8hnr9n2ab3yr" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Claude-Cowork.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AGENTIC & MCP -->
+  <section class="tier">
+    <div class="tier-label">Agentic Architecture & MCP</div>
+    <div class="cert-grid">
+
+      <div class="cert-card">
+        <div class="cert-name">Introduction to Agent Skills</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/3nerir42udeo" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/AgentSkills.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Introduction to Subagents</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/tqr9jn4izjaa" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/SubAgents.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Introduction to Model Context Protocol (MCP)</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/yy6puhzkw3vn" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/Intro-MCP.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-name">Model Context Protocol: Advanced Topics</div>
+        <div class="cert-org">Anthropic Academy</div>
+        <div class="cert-actions">
+          <a href="https://verify.skilljar.com/c/56sinbq2zdn5" target="_blank" rel="noopener" class="cert-link verify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Verify
+          </a>
+          <a href="assets/certs/MCP-AdvancedTopics.pdf" class="cert-link" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="gallery-footer">
+    <p>© 2026 Chris Riley</p>
+  </footer>
+
+</div>
+</body>
+</html>
