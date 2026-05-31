@@ -60,33 +60,33 @@
     min-height: 78vh; display: flex; flex-direction: column;
     justify-content: center; padding: 100px 0 60px; border-top: none;
   }
-  .hero-orb {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #6db4ff, var(--blue) 40%, #1a4a8a 100%);
-    box-shadow: 0 0 40px var(--blue-glow), 0 0 80px rgba(74,158,255,0.08);
-    margin-bottom: 36px;
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--brass); margin-bottom: 24px;
   }
   .hero h1 {
     font-family: var(--serif); font-size: clamp(3rem, 8vw, 5.5rem);
     font-weight: 600; line-height: 0.98; letter-spacing: -0.02em;
     color: var(--white); margin-bottom: 24px;
+    border-left: 2px solid var(--brass); padding-left: 1.25rem;
   }
   .hero-roles {
     display: flex; flex-wrap: wrap; gap: 10px 0; align-items: center;
     font-family: var(--mono); font-size: clamp(12px, 2vw, 14px);
     letter-spacing: 0.04em; color: var(--text-soft); margin-bottom: 44px;
+    padding-left: calc(1.25rem + 2px);
   }
   .hero-roles .role { color: var(--text); }
   .hero-roles .dot { color: var(--brass); margin: 0 16px; font-size: 8px; vertical-align: middle; }
-  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; padding-left: calc(1.25rem + 2px); }
   .btn {
     display: inline-flex; align-items: center; gap: 9px;
     font-family: var(--mono); font-size: 13px; font-weight: 500;
     letter-spacing: 0.03em; text-decoration: none; padding: 12px 26px;
     border-radius: 2px; transition: all 0.25s ease; cursor: pointer;
   }
-  .btn-primary { background: var(--blue); color: var(--bg); border: 1px solid var(--blue); }
-  .btn-primary:hover { background: transparent; color: var(--blue); box-shadow: 0 0 24px var(--blue-glow); }
+  .btn-primary { background: var(--brass); color: #07070c; border: 1px solid var(--brass); }
+  .btn-primary:hover { background: transparent; color: var(--brass); box-shadow: 0 0 24px var(--brass-glow); }
   .btn svg { width: 14px; height: 14px; }
   .hero-link {
     font-family: var(--mono); font-size: 13px; color: var(--text-soft);
@@ -228,7 +228,7 @@
 <div class="wrap">
 
   <header class="hero">
-    <div class="hero-orb rise"></div>
+    <div class="hero-eyebrow rise">PORTFOLIO — 2026</div>
     <h1 class="rise d1">Chris Riley</h1>
     <div class="hero-roles rise d2">
       <span class="role">Community Mental Health</span>
