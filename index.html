@@ -134,11 +134,13 @@
     background: var(--blue-glow); border: 1px solid rgba(74,158,255,0.18);
     padding: 4px 11px; border-radius: 2px; letter-spacing: 0.02em;
   }
-  .card-note { font-family: var(--mono); font-size: 11px; color: var(--text-mute); margin-top: 18px; }
-  .card-status-link { text-decoration: none; }
-  .card-status-link:hover { opacity: 0.75; }
-  .card-note-link { color: inherit; text-decoration: none; transition: color 0.2s; }
-  .card-note-link:hover { color: var(--brass); }
+  .card-link { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+  .card-link:hover .card { border-color: var(--brass); }
+  .card-cta {
+    font-family: var(--mono); font-size: 12px; color: var(--brass);
+    letter-spacing: 0.5px; margin-top: 18px; transition: text-shadow 0.2s;
+  }
+  .card-link:hover .card-cta { text-shadow: 0 0 8px rgba(201, 165, 78, 0.3); }
 
   .supporting { margin-top: 56px; }
   .supporting-label {
@@ -250,20 +252,24 @@
   <section>
     <div class="eyebrow">What I Build</div>
     <div class="systems-grid">
-      <div class="card">
-        <div class="card-head"><span class="card-name">Prometheus</span><a href="prometheus-demo.html" target="_blank" class="card-status demo card-status-link">Demo</a></div>
-        <div class="card-type">Quantitative Research System</div>
-        <p class="card-desc">Independently-derived volatility methodology with interactive backtesting and AI-augmented daily intelligence briefings. Schema-enforced output, empirical Bayesian confidence calibration, and self-auditing anti-hallucination logic.</p>
-        <div class="tags"><span class="tag">Claude API</span><span class="tag">Vanilla JS</span><span class="tag">Plotly</span><span class="tag">Bayesian</span></div>
-        <p class="card-note"><a href="prometheus-demo.html" target="_blank" class="card-note-link">Interactive demo — synthetic data only.</a></p>
-      </div>
-      <div class="card">
-        <div class="card-head"><span class="card-name">Meridian OS</span><a href="meridian-demo.html" target="_blank" class="card-status demo card-status-link">Demo</a></div>
-        <div class="card-type">Market Intelligence Dashboard</div>
-        <p class="card-desc">Eight-page mission-control frontend consuming real-time feeds from multiple Railway worker services, with AI-generated narrative briefs. Autonomous pipeline architecture with scheduled ingest, export, and self-healing conductor patterns.</p>
-        <div class="tags"><span class="tag">FastAPI</span><span class="tag">Railway</span><span class="tag">WebSocket</span><span class="tag">SQLite</span></div>
-        <p class="card-note"><a href="meridian-demo.html" target="_blank" class="card-note-link">Interactive demo — synthetic data only.</a></p>
-      </div>
+      <a href="prometheus-demo.html" target="_blank" class="card-link">
+        <div class="card">
+          <div class="card-head"><span class="card-name">Prometheus</span><span class="card-status demo">Demo</span></div>
+          <div class="card-type">Quantitative Research System</div>
+          <p class="card-desc">Independently-derived volatility methodology with interactive backtesting and AI-augmented daily intelligence briefings. Schema-enforced output, empirical Bayesian confidence calibration, and self-auditing anti-hallucination logic.</p>
+          <div class="tags"><span class="tag">Claude API</span><span class="tag">Vanilla JS</span><span class="tag">Plotly</span><span class="tag">Bayesian</span></div>
+          <p class="card-cta">Explore Demo →</p>
+        </div>
+      </a>
+      <a href="meridian-demo.html" target="_blank" class="card-link">
+        <div class="card">
+          <div class="card-head"><span class="card-name">Meridian OS</span><span class="card-status demo">Demo</span></div>
+          <div class="card-type">Market Intelligence Dashboard</div>
+          <p class="card-desc">Eight-page mission-control frontend consuming real-time feeds from multiple Railway worker services, with AI-generated narrative briefs. Autonomous pipeline architecture with scheduled ingest, export, and self-healing conductor patterns.</p>
+          <div class="tags"><span class="tag">FastAPI</span><span class="tag">Railway</span><span class="tag">WebSocket</span><span class="tag">SQLite</span></div>
+          <p class="card-cta">Explore Demo →</p>
+        </div>
+      </a>
     </div>
     <div class="supporting">
       <div class="supporting-label">Supporting Infrastructure</div>
