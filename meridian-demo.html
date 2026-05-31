@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian OS — Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ════════════════════════════════════════
+       MERIDIAN OS — Design System v1.0
+       Demo Build · Synthetic Data Only
+       ════════════════════════════════════════ */
+    :root {
+      --bg-deep:      #07070c;
+      --bg-primary:   #0a0a0f;
+      --bg-surface:   #12121c;
+      --bg-elevated:  #18182a;
+      --bg-hover:     #1e1e32;
+      --border:       #1a1a2e;
+      --border-hi:    #2a2a44;
+      --brass:        #c9a54e;
+      --brass-dim:    #8b7340;
+      --brass-glow:   rgba(201, 165, 78, 0.08);
+      --brass-glow-md:rgba(201, 165, 78, 0.15);
+      --text-primary: #f0ece4;
+      --text-secondary:#7a7680;
+      --text-tertiary: #4a4654;
+      --positive:     #4caf7c;
+      --positive-dim: rgba(76, 175, 124, 0.12);
+      --negative:     #cf5c5c;
+      --negative-dim: rgba(207, 92, 92, 0.12);
+      --neutral:      #7a7680;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --sidebar-width: 240px;
+      --header-height: 56px;
+      --radius:        8px;
+      --radius-lg:     12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── DEMO BANNER ── */
+    .demo-banner {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 28px;
+      background: linear-gradient(90deg, var(--brass-dim), var(--brass), var(--brass-dim));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      gap: 8px;
+    }
+    .demo-banner span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--bg-deep);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 28px; bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--bg-deep);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .sidebar-orb {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #5bc0eb, #1a6b8a, #0a3a4a);
+      box-shadow: 0 0 12px rgba(91, 192, 235, 0.3), inset 0 0 8px rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: 1.5px;
+    }
+    .sidebar-subtitle {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--brass-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-item.active { background: var(--brass-glow); color: var(--brass); border-color: rgba(201, 165, 78, 0.12); }
+    .nav-item.active .nav-icon { color: var(--brass); }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+    .nav-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-version {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-width);
+      margin-top: 28px;
+      min-height: calc(100vh - 28px);
+    }
+    .top-header {
+      position: sticky;
+      top: 28px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-height);
+      padding: 0 32px;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .header-time { font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); font-weight: 600; }
+    .header-location { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+    .header-indices { display: flex; align-items: center; gap: 24px; }
+    .index-item { display: flex; align-items: baseline; gap: 8px; }
+    .index-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
+    .index-value { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
+
+    /* ── CONTENT ── */
+    .content { padding: 32px; max-width: 1280px; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── PANELS ── */
+    .panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .panel-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+    }
+    .panel-body { padding: 16px 20px; }
+
+    /* ── DATA TABLES ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-tertiary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--bg-elevated); }
+
+    /* ── STAT CARDS ── */
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      text-align: center;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-tertiary);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .stat-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ── SPLIT ROWS ── */
+    .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+    /* ── GREETING ── */
+    .greeting {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .greeting-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      margin-bottom: 32px;
+    }
+
+    /* ── INSTRUMENT CARDS ── */
+    .instruments-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .instrument-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .instrument-card:hover { border-color: var(--border-hi); }
+    .inst-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .inst-id { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--brass); }
+    .inst-type { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+    .inst-score { font-family: var(--font-mono); font-size: 20px; font-weight: 700; }
+    .inst-delta { font-family: var(--font-mono); font-size: 10px; margin-top: 2px; }
+    .inst-narrative {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    /* ── CONDITIONS STRIP ── */
+    .conditions-strip {
+      display: flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .condition-item {
+      flex: 1;
+      padding: 14px 18px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .condition-item:last-child { border-right: none; }
+    .condition-label { font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .condition-value { font-family: var(--font-mono); font-size: 15px; font-weight: 600; }
+
+    /* ── HEATMAP ── */
+    .heatmap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .heatmap-cell {
+      background: var(--bg-elevated);
+      border-radius: var(--radius);
+      padding: 12px;
+      text-align: center;
+      transition: transform 0.15s;
+    }
+    .heatmap-cell:hover { transform: scale(1.03); }
+    .heatmap-id { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .heatmap-val { font-family: var(--font-mono); font-size: 13px; font-weight: 700; }
+
+    /* ── TAGS / PILLS ── */
+    .tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-a { background: var(--positive-dim); color: var(--positive); }
+    .tag-b { background: rgba(201, 165, 78, 0.12); color: var(--brass); }
+    .tag-watch { background: rgba(122, 118, 128, 0.12); color: var(--neutral); }
+    .tag-confirmed { background: var(--positive-dim); color: var(--positive); }
+    .tag-rejected { background: var(--negative-dim); color: var(--negative); }
+    .tag-pending { background: rgba(122, 118, 128, 0.12); color: var(--neutral); }
+    .tag-expired { background: rgba(122, 118, 128, 0.08); color: var(--text-tertiary); }
+
+    /* ── GATE STATUS ── */
+    .gate-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .gate-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .gate-icon { font-size: 20px; margin-bottom: 6px; }
+    .gate-name { font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .gate-status { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+
+    /* ── SYSTEM STATUS CARDS ── */
+    .sys-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .sys-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .sys-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .sys-name { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px; }
+    .sys-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .sys-dot.green { background: var(--positive); box-shadow: 0 0 6px var(--positive); }
+    .sys-dot.amber { background: var(--brass); box-shadow: 0 0 6px var(--brass); }
+    .sys-dot.red { background: var(--negative); box-shadow: 0 0 6px var(--negative); }
+    .sys-detail { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); margin-bottom: 4px; }
+    .sys-detail-label { color: var(--text-tertiary); }
+
+    /* ── CALENDAR HEATMAP ── */
+    .cal-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 3px; }
+    .cal-cell {
+      aspect-ratio: 1;
+      border-radius: 2px;
+      background: var(--bg-elevated);
+    }
+    .cal-cell.pass { background: var(--positive); opacity: 0.7; }
+    .cal-cell.fail { background: var(--negative); opacity: 0.7; }
+    .cal-cell.none { background: var(--bg-elevated); }
+
+    /* ── GAUGE ── */
+    .gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
+    .gauge-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+    .gauge-value { font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--text-primary); margin-top: 12px; }
+    .gauge-unit { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .page-title .status-chip {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .chip-online { background: var(--positive-dim); color: var(--positive); }
+    .chip-idle { background: rgba(201, 165, 78, 0.12); color: var(--brass); }
+    .page-desc {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      margin-bottom: 28px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    /* ── CONFIDENTIALITY NOTE ── */
+    .conf-note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.3px;
+      padding: 12px 16px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* ── DIRECTIVE CARD ── */
+    .directive-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .directive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .directive-id { font-family: var(--font-mono); font-size: 11px; color: var(--brass); font-weight: 600; }
+    .directive-body { font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .directive-meta { font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary); margin-top: 8px; letter-spacing: 0.5px; }
+
+    /* ── ENERGY GAUGE SVG ── */
+    .energy-section { display: flex; gap: 24px; margin-bottom: 24px; }
+    .energy-main { flex: 2; }
+    .energy-side { flex: 1; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+
+    /* ── UTILITIES ── */
+    .pos { color: var(--positive); }
+    .neg { color: var(--negative); }
+    .neu { color: var(--neutral); }
+    .brass { color: var(--brass); }
+    .dim { color: var(--text-secondary); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page.active .content > * { animation: fadeIn 0.4s ease both; }
+    .page.active .content > *:nth-child(1) { animation-delay: 0.05s; }
+    .page.active .content > *:nth-child(2) { animation-delay: 0.1s; }
+    .page.active .content > *:nth-child(3) { animation-delay: 0.15s; }
+    .page.active .content > *:nth-child(4) { animation-delay: 0.2s; }
+    .page.active .content > *:nth-child(5) { animation-delay: 0.25s; }
+    .page.active .content > *:nth-child(6) { animation-delay: 0.3s; }
+    .page.active .content > *:nth-child(7) { animation-delay: 0.35s; }
+    .page.active .content > *:nth-child(8) { animation-delay: 0.4s; }
+    .page.active .content > *:nth-child(9) { animation-delay: 0.45s; }
+
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .pulse { animation: pulse 2s ease-in-out infinite; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .instruments-grid { grid-template-columns: repeat(2, 1fr); }
+      .heatmap-grid { grid-template-columns: repeat(3, 1fr); }
+      .split-row { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+      .sys-grid { grid-template-columns: repeat(2, 1fr); }
+      .gate-row { grid-template-columns: repeat(2, 1fr); }
+      .energy-section { flex-direction: column; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .content { padding: 20px 16px; }
+      .top-header { padding: 0 16px; }
+      .header-indices { display: none; }
+      .mobile-menu-btn { display: block; }
+      .stat-row { grid-template-columns: 1fr; }
+      .sys-grid { grid-template-columns: 1fr; }
+      .conditions-strip { flex-wrap: wrap; }
+      .condition-item { flex: 1 1 45%; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+    .mobile-menu-btn { display: none; background: none; border: none; color: var(--text-secondary); font-size: 20px; cursor: pointer; padding: 4px; }
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
+    .mobile-overlay.open { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ DEMO BANNER ═══ -->
+<div class="demo-banner">
+  <span>◆ Interactive Demo — Synthetic Data Only ◆</span>
+</div>
+
+<!-- ═══ MOBILE OVERLAY ═══ -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand" onclick="navigate('home')">
+      <div class="sidebar-orb"></div>
+      <div>
+        <div class="sidebar-title">MERIDIAN</div>
+        <div class="sidebar-subtitle">Operating System</div>
+      </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-page="home" onclick="navigate('home')">
+      <span class="nav-icon">◉</span>
+      <span class="nav-label">Meridian OS</span>
+    </div>
+    <div class="nav-item" data-page="atlas" onclick="navigate('atlas')">
+      <span class="nav-icon">◈</span>
+      <span class="nav-label">Atlas</span>
+    </div>
+    <div class="nav-item" data-page="chalmers" onclick="navigate('chalmers')">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-label">Chalmers</span>
+    </div>
+    <div class="nav-item" data-page="themis" onclick="navigate('themis')">
+      <span class="nav-icon">◎</span>
+      <span class="nav-label">Themis</span>
+    </div>
+    <div class="nav-item" data-page="crude" onclick="navigate('crude')">
+      <span class="nav-icon">▲</span>
+      <span class="nav-label">Crude Logic</span>
+    </div>
+    <div class="nav-item" data-page="system" onclick="navigate('system')">
+      <span class="nav-icon">⬡</span>
+      <span class="nav-label">System</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-version">v1.0.0 · MERIDIAN BUILDS</div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <header class="top-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <span class="header-time" id="headerTime"></span>
+      <span class="header-location">Detroit, MI</span>
+    </div>
+    <div class="header-indices">
+      <div class="index-item">
+        <span class="index-label">IDX-A</span>
+        <span class="index-value" id="idxA">—</span>
+      </div>
+      <div class="index-item">
+        <span class="index-label">IDX-B</span>
+        <span class="index-value" id="idxB">—</span>
+      </div>
+      <div class="index-item">
+        <span class="index-label">IDX-C</span>
+        <span class="index-value" id="idxC">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════
+       PAGE: HOME
+       ════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <div class="content">
+      <div>
+        <div class="greeting" id="greeting"></div>
+        <div class="greeting-sub" id="greetingSub"></div>
+      </div>
+
+      <div class="instruments-grid" id="instrumentCards"></div>
+
+      <div class="conditions-strip">
+        <div class="condition-item">
+          <div class="condition-label">Dispersion Index</div>
+          <div class="condition-value" id="condVol">18.42</div>
+        </div>
+        <div class="condition-item">
+          <div class="condition-label">Primary Benchmark</div>
+          <div class="condition-value pos" id="condBench">+0.34%</div>
+        </div>
+        <div class="condition-item">
+          <div class="condition-label">Cluster Breadth</div>
+          <div class="condition-value" id="condBreadth">8 / 11</div>
+        </div>
+        <div class="condition-item">
+          <div class="condition-label">Regime</div>
+          <div class="condition-value brass">RISK-ON</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Entity Cluster Activity</span>
+          <span class="panel-meta">Synthetic · 12 clusters</span>
+        </div>
+        <div class="panel-body">
+          <div class="heatmap-grid" id="heatmapGrid"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">ATLAS Picks</span>
+          <span class="panel-meta">Top 3 by score</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>Entity</th><th>Score</th><th>Tier</th><th>State</th><th>Confidence</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td style="color:var(--brass)">ARC-2241</td><td>91.4</td><td><span class="tag tag-a">A</span></td><td>Expanding</td><td class="pos">0.87</td></tr>
+              <tr><td>2</td><td style="color:var(--brass)">VEX-0718</td><td>88.2</td><td><span class="tag tag-a">A</span></td><td>Normal</td><td class="pos">0.82</td></tr>
+              <tr><td>3</td><td style="color:var(--brass)">NRQ-1455</td><td>84.7</td><td><span class="tag tag-b">B</span></td><td>Compressed</td><td>0.71</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PAGE: ATLAS
+       ════════════════════════════════════ -->
+  <div class="page" id="page-atlas">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">ATLAS v4.3 <span class="status-chip chip-online">Online</span></div>
+        <div class="page-desc">Autonomous scoring pipeline. Screens ~1,927 entities daily, applies multi-factor analysis, persists ranked signals to SQLite. Runs autonomously on Railway with scheduled ingest, scoring, and export.</div>
+      </div>
+
+      <div class="conf-note">Domain abstracted for confidentiality. Architecture, scoring, validation, and visualization shown are representative of the production system; underlying data is synthetic.</div>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-label">Entities Scanned</div><div class="stat-value">1,927</div><div class="stat-sub">Today · 9:10 AM</div></div>
+        <div class="stat-card"><div class="stat-label">Signals Emitted</div><div class="stat-value">7</div><div class="stat-sub">A: 3 · B: 2 · Watch: 2</div></div>
+        <div class="stat-card"><div class="stat-label">Resolution Rate</div><div class="stat-value pos">64.2%</div><div class="stat-sub">Last 90 days</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Confidence</div><div class="stat-value">0.78</div><div class="stat-sub">A-tier: 0.84</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Signal Browser</span>
+          <span class="panel-meta">All historical signals · Synthetic</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="data-table" id="signalTable">
+            <thead><tr><th>Date</th><th>Entity</th><th>Score</th><th>Tier</th><th>State</th><th>Confidence</th><th>Resolution</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="split-row">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Outcome Waterfall</span>
+            <span class="panel-meta">Last 90 days</span>
+          </div>
+          <div class="panel-body">
+            <div id="waterfallChart" style="height:180px;"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Resolution Trend</span>
+            <span class="panel-meta">Rolling 30-day accuracy</span>
+          </div>
+          <div class="panel-body">
+            <div id="trendChart" style="height:180px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="split-row">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Signal Calendar</span>
+            <span class="panel-meta">90 days · Signals per day</span>
+          </div>
+          <div class="panel-body" id="signalCalendar"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Entity Frequency</span>
+            <span class="panel-meta">Most scanned · All time</span>
+          </div>
+          <div class="panel-body" id="freqChart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PAGE: CHALMERS
+       ════════════════════════════════════ -->
+  <div class="page" id="page-chalmers">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">ChalmersGhost <span class="status-chip chip-online">Session Active</span></div>
+        <div class="page-desc">Real-time event processing engine. FastAPI on Railway, 5-phase session architecture, WebSocket streaming with REST ingestion, multi-gate validation, and automated alerting. One validated event per entity per session — never violated.</div>
+      </div>
+
+      <div class="conf-note">Domain abstracted for confidentiality. Architecture, scoring, validation, and visualization shown are representative of the production system; underlying data is synthetic.</div>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-label">Session Phase</div><div class="stat-value brass">MONITOR</div><div class="stat-sub">Phase 4 of 5</div></div>
+        <div class="stat-card"><div class="stat-label">Active Entities</div><div class="stat-value">5</div><div class="stat-sub">From ATLAS queue</div></div>
+        <div class="stat-card"><div class="stat-label">Events Today</div><div class="stat-value pos">2</div><div class="stat-sub">Validated</div></div>
+        <div class="stat-card"><div class="stat-label">Session Window</div><div class="stat-value">9:25 → 11:35</div><div class="stat-sub">EST · Weekdays</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Validation Gates</span>
+          <span class="panel-meta">All 4 must pass on observation window close</span>
+        </div>
+        <div class="panel-body">
+          <div class="gate-row">
+            <div class="gate-card"><div class="gate-icon">📊</div><div class="gate-name">Threshold Gate</div><div class="gate-status pos">PASS</div></div>
+            <div class="gate-card"><div class="gate-icon">📈</div><div class="gate-name">Volume Confirmation</div><div class="gate-status neg">FAIL</div></div>
+            <div class="gate-card"><div class="gate-icon">📐</div><div class="gate-name">Trend Alignment</div><div class="gate-status pos">PASS</div></div>
+            <div class="gate-card"><div class="gate-icon">🕐</div><div class="gate-name">Window Validity</div><div class="gate-status pos">PASS</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Entity Monitor</span>
+          <span class="panel-meta">Live session · Synthetic</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>Entity</th><th>State</th><th>Gate 1</th><th>Gate 2</th><th>Gate 3</th><th>Gate 4</th><th>Result</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--brass)">ARC-2241</td><td>Monitoring</td><td class="pos">✓</td><td class="pos">✓</td><td class="pos">✓</td><td class="pos">✓</td><td><span class="tag tag-confirmed">Validated</span></td></tr>
+              <tr><td style="color:var(--brass)">VEX-0718</td><td>Monitoring</td><td class="pos">✓</td><td class="neg">✗</td><td class="pos">✓</td><td class="pos">✓</td><td><span class="tag tag-pending">Pending</span></td></tr>
+              <tr><td style="color:var(--brass)">NRQ-1455</td><td>Monitoring</td><td class="neg">✗</td><td class="neg">✗</td><td class="pos">✓</td><td class="pos">✓</td><td><span class="tag tag-pending">Pending</span></td></tr>
+              <tr><td style="color:var(--brass)">KPL-3302</td><td>Monitoring</td><td class="pos">✓</td><td class="pos">✓</td><td class="pos">✓</td><td class="pos">✓</td><td><span class="tag tag-confirmed">Validated</span></td></tr>
+              <tr><td style="color:var(--brass)">DTX-0891</td><td>Monitoring</td><td class="neg">✗</td><td class="neg">✗</td><td class="neg">✗</td><td class="pos">✓</td><td><span class="tag tag-rejected">Rejected</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Session Lifecycle</span>
+          <span class="panel-meta">5-phase architecture</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:4px;align-items:center;">
+            <div style="flex:1;padding:10px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--positive);opacity:0.5;">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;text-transform:uppercase;">Phase 1</div>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-top:4px;">Receive</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="flex:1;padding:10px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--positive);opacity:0.5;">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;text-transform:uppercase;">Phase 2</div>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-top:4px;">Connect</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="flex:1;padding:10px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--positive);opacity:0.5;">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;text-transform:uppercase;">Phase 3</div>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-top:4px;">Build</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="flex:1;padding:10px;background:var(--brass-glow-md);border-radius:var(--radius);text-align:center;border:1px solid var(--brass);">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--brass);letter-spacing:1px;text-transform:uppercase;">Phase 4</div>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--brass);margin-top:4px;font-weight:600;">Monitor</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="flex:1;padding:10px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--border);opacity:0.4;">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;text-transform:uppercase;">Phase 5</div>
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-top:4px;">Close</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PAGE: THEMIS
+       ════════════════════════════════════ -->
+  <div class="page" id="page-themis">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">THEMIS <span class="status-chip chip-idle">Observing</span></div>
+        <div class="page-desc">Autonomous performance auditor. Closed-loop evaluation engine that measures system accuracy against real-world outcomes and generates its own improvement directives with minimal human oversight. Observe weekly, act quarterly.</div>
+      </div>
+
+      <div class="conf-note">Domain abstracted for confidentiality. Architecture, scoring, validation, and visualization shown are representative of the production system; underlying data is synthetic.</div>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-label">Signals Audited</div><div class="stat-value">243</div><div class="stat-sub">Lifetime</div></div>
+        <div class="stat-card"><div class="stat-label">Resolution Accuracy</div><div class="stat-value pos">64.2%</div><div class="stat-sub">A-tier: 71.8%</div></div>
+        <div class="stat-card"><div class="stat-label">Active Directives</div><div class="stat-value brass">3</div><div class="stat-sub">Pending quarterly review</div></div>
+        <div class="stat-card"><div class="stat-label">Next Tuning Window</div><div class="stat-value">Jul 26</div><div class="stat-sub">Min 50 per tier required</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Active Directives</span>
+          <span class="panel-meta">Generated by Claude Opus · Awaiting sample threshold</span>
+        </div>
+        <div class="panel-body">
+          <div class="directive-card">
+            <div class="directive-header">
+              <span class="directive-id">DIRECTIVE-024</span>
+              <span class="tag tag-pending">Pending · 34/50 samples</span>
+            </div>
+            <div class="directive-body">B-tier entities with compressed volatility state show 23% lower resolution rate than expanding-state peers. Recommend raising the scoring floor for compressed-state B-tier signals by 4 points when sample count reaches 50.</div>
+            <div class="directive-meta">Generated: May 18, 2026 · Source: Weekly audit cycle 19</div>
+          </div>
+          <div class="directive-card">
+            <div class="directive-header">
+              <span class="directive-id">DIRECTIVE-023</span>
+              <span class="tag tag-pending">Pending · 178/200 samples</span>
+            </div>
+            <div class="directive-body">Volume confirmation gate shows marginal lift when threshold is calibrated to entity-specific historical norms rather than session-relative averages. Statistical significance not yet achieved — hold for 200+ observations before recommending structural change.</div>
+            <div class="directive-meta">Generated: May 11, 2026 · Source: Weekly audit cycle 18</div>
+          </div>
+          <div class="directive-card">
+            <div class="directive-header">
+              <span class="directive-id">DIRECTIVE-021</span>
+              <span class="tag tag-confirmed">Applied · Q1 review</span>
+            </div>
+            <div class="directive-body">A-tier confidence threshold increase from 0.72 to 0.78 produced measurable improvement in resolution accuracy (+3.1pp) with acceptable signal volume reduction (−8%). Recommend maintaining current threshold.</div>
+            <div class="directive-meta">Generated: Mar 2, 2026 · Applied: Mar 15, 2026 · Samples at review: 67</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Resolution by Tier</span>
+          <span class="panel-meta">Lifetime accuracy</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>Tier</th><th>Signals</th><th>Confirmed</th><th>Rejected</th><th>Expired</th><th>Accuracy</th><th>Sample Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-a">A</span></td><td>78</td><td class="pos">56</td><td class="neg">18</td><td class="dim">4</td><td class="pos">71.8%</td><td class="pos">✓ Tunable (≥50)</td></tr>
+              <tr><td><span class="tag tag-b">B</span></td><td>104</td><td class="pos">62</td><td class="neg">34</td><td class="dim">8</td><td>59.6%</td><td class="pos">✓ Tunable (≥50)</td></tr>
+              <tr><td><span class="tag tag-watch">Watch</span></td><td>61</td><td class="pos">28</td><td class="neg">24</td><td class="dim">9</td><td>45.9%</td><td class="pos">✓ Tunable (≥50)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Cadence Rules</span>
+          <span class="panel-meta">Anti-overfitting safeguards</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead><tr><th>Parameter Class</th><th>Min Samples</th><th>Current</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Tier filters</td><td>30–50</td><td>78 / 104 / 61</td><td class="pos">Ready</td></tr>
+              <tr><td>Scoring weights</td><td>200+</td><td>178</td><td class="brass">22 remaining</td></tr>
+              <tr><td>Hard filters (near-boundary)</td><td>50+</td><td>34</td><td class="neg">16 remaining</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PAGE: CRUDE LOGIC
+       ════════════════════════════════════ -->
+  <div class="page" id="page-crude">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">Crude Logic <span class="status-chip chip-online">Online</span></div>
+        <div class="page-desc">Household energy intelligence dashboard. Wayne County gas price prediction model with daily ingest from FRED, EIA, and commodity feeds. Phase 1: Ridge regression with personal calibration offset. Automated narrative briefing via Claude Sonnet.</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-label">Detroit Metro Avg</div><div class="stat-value">$3.24</div><div class="stat-sub">BLS · FRED series</div></div>
+        <div class="stat-card"><div class="stat-label">7-Day Prediction</div><div class="stat-value neg">$3.31</div><div class="stat-sub">Ridge model · +$0.07</div></div>
+        <div class="stat-card"><div class="stat-label">Model Phase</div><div class="stat-value brass">1</div><div class="stat-sub">Ridge regression active</div></div>
+        <div class="stat-card"><div class="stat-label">Training Samples</div><div class="stat-value">47</div><div class="stat-sub">daily_snapshots</div></div>
+      </div>
+
+      <div class="energy-section">
+        <div class="energy-main">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Price Prediction</span>
+              <span class="panel-meta">7-day outlook · Synthetic</span>
+            </div>
+            <div class="panel-body">
+              <div id="energyChart" style="height:200px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="energy-side">
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Direction Gauge</span>
+            </div>
+            <div class="panel-body">
+              <div class="gauge-wrap">
+                <div class="gauge-label">7-Day Outlook</div>
+                <svg width="160" height="100" viewBox="0 0 160 100">
+                  <path d="M 20 90 A 60 60 0 0 1 140 90" fill="none" stroke="var(--border-hi)" stroke-width="10" stroke-linecap="round"/>
+                  <path d="M 20 90 A 60 60 0 0 1 105 40" fill="none" stroke="var(--negative)" stroke-width="10" stroke-linecap="round"/>
+                  <circle cx="105" cy="40" r="5" fill="var(--negative)"/>
+                </svg>
+                <div class="gauge-value neg">↑ Rising</div>
+                <div class="gauge-unit">+2.2% projected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Energy Briefing</span>
+          <span class="panel-meta">Claude Sonnet · Daily narrative</span>
+        </div>
+        <div class="panel-body">
+          <div class="inst-narrative" style="border-top:none;padding-top:0;">Detroit metro gasoline prices remain in a moderate uptrend, driven by seasonal refinery maintenance and a modest crude rally. WTI is holding above the $72 level on reduced US inventory draws. The EIA weekly print showed a 2.1M barrel drawdown, tighter than the 1.4M consensus. Regional spreads remain compressed — the Great Lakes PADD II crack spread is trending near its 30-day mean, suggesting no immediate supply disruption. Watch Wednesday's EIA release for confirmation of the trend.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Model Architecture</span>
+          <span class="panel-meta">Pipeline overview</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+            <div style="padding:10px 16px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--border);">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;">INGEST</div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);margin-top:2px;">FRED · EIA · Finnhub</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="padding:10px 16px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--border);">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;">PREDICT</div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);margin-top:2px;">Ridge · SQLite</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="padding:10px 16px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--border);">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;">NARRATE</div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);margin-top:2px;">Claude Sonnet</div>
+            </div>
+            <div style="color:var(--text-tertiary);">→</div>
+            <div style="padding:10px 16px;background:var(--bg-elevated);border-radius:var(--radius);text-align:center;border:1px solid var(--border);">
+              <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;">EXPORT</div>
+              <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);margin-top:2px;">GitHub Pages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════
+       PAGE: SYSTEM
+       ════════════════════════════════════ -->
+  <div class="page" id="page-system">
+    <div class="content">
+      <div class="page-header">
+        <div class="page-title">Mission Control</div>
+        <div class="page-desc">All systems at a glance. Green means running. Red means broken.</div>
+      </div>
+
+      <div class="sys-grid">
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">ATLAS</span><div class="sys-dot green"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Last run:</span> Today 9:10 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Next run:</span> Mon–Fri 9:10 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Service:</span> Railway worker</div>
+        </div>
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">ChalmersGhost</span><div class="sys-dot green pulse"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Status:</span> <span class="pos">Session active</span></div>
+          <div class="sys-detail"><span class="sys-detail-label">Session:</span> 9:25 AM → 11:35 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Service:</span> Railway · Always on</div>
+        </div>
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">HEPHAESTUS</span><div class="sys-dot green"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Last activity:</span> Today 9:12 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Role:</span> Discord bot · Always on</div>
+          <div class="sys-detail"><span class="sys-detail-label">Service:</span> Railway worker</div>
+        </div>
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">THEMIS</span><div class="sys-dot green"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Last audit:</span> Sun 7:00 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Next audit:</span> Sunday 7:00 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Cadence:</span> Weekly observe</div>
+        </div>
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">Crude Logic</span><div class="sys-dot green"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Last publish:</span> Today 7:30 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Next run:</span> Mon–Fri 7:30 AM</div>
+          <div class="sys-detail"><span class="sys-detail-label">Service:</span> Railway · US East</div>
+        </div>
+        <div class="sys-card">
+          <div class="sys-header"><span class="sys-name">Meridian OS</span><div class="sys-dot green"></div></div>
+          <div class="sys-detail"><span class="sys-detail-label">Pages:</span> 8 pages · read-only</div>
+          <div class="sys-detail"><span class="sys-detail-label">Platform:</span> GitHub Pages</div>
+          <div class="sys-detail"><span class="sys-detail-label">Deploy:</span> ~30s on push</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Monthly Billing</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead><tr><th>Service</th><th>Cost</th><th>Usage</th></tr></thead>
+            <tbody>
+              <tr><td>GitHub Pro</td><td>$4</td><td>Private repos + Actions</td></tr>
+              <tr><td>Railway Hobby</td><td>$5</td><td>3 persistent workers</td></tr>
+              <tr><td style="font-weight:700;color:var(--brass);">Total</td><td style="font-weight:700;color:var(--brass);">$9/mo</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Master Schedule</span>
+          <span class="panel-meta">Every scheduled job · EST</span>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Job</th><th>Repo</th><th>Frequency</th><th>Platform</th></tr></thead>
+            <tbody>
+              <tr><td>7:30 AM</td><td>Full ingest + predict + publish</td><td style="color:var(--text-secondary)">frack-around</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>8:00 AM</td><td>Cold Brew export (narratives)</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>9:10 AM</td><td>ATLAS scan sequence</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>9:25 AM</td><td>ChalmersGhost connect + stream</td><td style="color:var(--text-secondary)">chalmers-engine</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>11:35 AM</td><td>Session disconnect + summary</td><td style="color:var(--text-secondary)">chalmers-engine</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>12:00 PM</td><td>Re-run post-EIA (Wed only)</td><td style="color:var(--text-secondary)">frack-around</td><td>Wednesday</td><td>Railway</td></tr>
+              <tr><td>4:30 PM</td><td>Accountability agents</td><td style="color:var(--text-secondary)">dashboard-ops</td><td>Daily</td><td>GH Actions</td></tr>
+              <tr><td>6:00 PM</td><td>Outcome tracker</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Mon–Fri</td><td>Railway</td></tr>
+              <tr><td>8:00 PM</td><td>Resolution checker + export</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Tue–Sat</td><td>Railway</td></tr>
+              <tr><td>Sun 6:30 AM</td><td>Claude digest scorecard</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Sunday</td><td>Railway</td></tr>
+              <tr><td>Sun 7:00 AM</td><td>THEMIS directives</td><td style="color:var(--text-secondary)">stack-quant-feed</td><td>Sunday</td><td>Railway</td></tr>
+              <tr><td>Sun 7:00 PM</td><td>Weekly performance report</td><td style="color:var(--text-secondary)">chalmers-engine</td><td>Sunday</td><td>Railway</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Uptime Calendar</span>
+          <span class="panel-meta">GitHub Actions · pass/fail by day · Synthetic</span>
+        </div>
+        <div class="panel-body" id="uptimeCalendar"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════
+// MERIDIAN OS — DEMO ENGINE
+// Zero API calls. All data synthetic.
+// ════════════════════════════════════════
+
+// ── SYNTHETIC DATA ──
+const DEMO = {
+  instruments: [
+    { id: 'STRM-A', type: 'Monitored Stream · Primary Benchmark', score: 214.8, delta: +0.34, narrative: 'Primary benchmark holding above the 20-period mean with breadth expanding. Eight of eleven entity clusters showing positive momentum. Dispersion index compressing toward the lower band — conditions favor continuation. Watch the 212 level for structural support on any pullback.' },
+    { id: 'STRM-B', type: 'Monitored Stream · Regional Canary', score: 58.2, delta: -0.18, narrative: 'Regional proxy showing mild weakness as expectation curves shift. Spread compression has stalled near the 30-day midpoint. This stream tends to lead broader regime changes by 3–5 sessions — worth monitoring for early divergence signals.' },
+    { id: 'STRM-C', type: 'Monitored Stream · Duration Reference', score: 4.41, delta: +0.02, narrative: 'Duration benchmark holding in the upper range of the quarterly channel. The 4.35–4.50 band has contained activity for three weeks. A sustained break above 4.50 would signal a regime shift in duration-sensitive clusters.' },
+    { id: 'STRM-D', type: 'Monitored Stream · Commodity Bridge', score: 72.6, delta: +1.12, narrative: 'Commodity cluster gaining momentum on supply draws tighter than consensus. Baseline commodity holding above the 72 structural floor. Seasonal maintenance cycle adds upward pressure through mid-June.' }
+  ],
+  heatmap: [
+    { id: 'CLU-01', label: 'Alpha', val: +1.2 }, { id: 'CLU-02', label: 'Beta', val: -0.4 },
+    { id: 'CLU-03', label: 'Gamma', val: +0.8 }, { id: 'CLU-04', label: 'Delta', val: +1.5 },
+    { id: 'CLU-05', label: 'Epsilon', val: +0.3 }, { id: 'CLU-06', label: 'Zeta', val: -0.1 },
+    { id: 'CLU-07', label: 'Eta', val: +0.2 }, { id: 'CLU-08', label: 'Theta', val: -0.6 },
+    { id: 'CLU-09', label: 'Iota', val: -0.9 }, { id: 'CLU-10', label: 'Kappa', val: +0.5 },
+    { id: 'CLU-11', label: 'Lambda', val: +0.1 }, { id: 'CLU-12', label: 'Mu', val: -1.8 }
+  ],
+  signals: [
+    { date: '2026-05-30', entity: 'ARC-2241', score: 91.4, tier: 'A', state: 'Expanding', conf: 0.87, res: 'Pending' },
+    { date: '2026-05-30', entity: 'VEX-0718', score: 88.2, tier: 'A', state: 'Normal', conf: 0.82, res: 'Pending' },
+    { date: '2026-05-30', entity: 'NRQ-1455', score: 84.7, tier: 'B', state: 'Compressed', conf: 0.71, res: 'Pending' },
+    { date: '2026-05-29', entity: 'KPL-3302', score: 90.1, tier: 'A', state: 'Expanding', conf: 0.85, res: 'Confirmed' },
+    { date: '2026-05-29', entity: 'DTX-0891', score: 82.3, tier: 'B', state: 'Normal', conf: 0.69, res: 'Rejected' },
+    { date: '2026-05-28', entity: 'FRN-4410', score: 93.8, tier: 'A', state: 'Expanding', conf: 0.91, res: 'Confirmed' },
+    { date: '2026-05-28', entity: 'MXP-2207', score: 86.5, tier: 'A', state: 'Normal', conf: 0.79, res: 'Confirmed' },
+    { date: '2026-05-28', entity: 'QTZ-1103', score: 79.2, tier: 'B', state: 'Unstable', conf: 0.62, res: 'Rejected' },
+    { date: '2026-05-27', entity: 'ARC-2241', score: 89.7, tier: 'A', state: 'Normal', conf: 0.83, res: 'Confirmed' },
+    { date: '2026-05-27', entity: 'BXL-0055', score: 81.4, tier: 'B', state: 'Compressed', conf: 0.67, res: 'Expired' },
+    { date: '2026-05-23', entity: 'VEX-0718', score: 87.1, tier: 'A', state: 'Expanding', conf: 0.80, res: 'Confirmed' },
+    { date: '2026-05-23', entity: 'PLR-6614', score: 76.3, tier: 'Watch', state: 'Normal', conf: 0.58, res: 'Rejected' },
+    { date: '2026-05-22', entity: 'DTX-0891', score: 85.0, tier: 'B', state: 'Expanding', conf: 0.74, res: 'Confirmed' },
+    { date: '2026-05-22', entity: 'NRQ-1455', score: 83.9, tier: 'B', state: 'Normal', conf: 0.72, res: 'Rejected' },
+    { date: '2026-05-21', entity: 'KPL-3302', score: 91.2, tier: 'A', state: 'Expanding', conf: 0.88, res: 'Confirmed' },
+    { date: '2026-05-21', entity: 'FRN-4410', score: 77.8, tier: 'Watch', state: 'Compressed', conf: 0.55, res: 'Expired' },
+    { date: '2026-05-20', entity: 'ARC-2241', score: 90.5, tier: 'A', state: 'Normal', conf: 0.86, res: 'Confirmed' },
+    { date: '2026-05-20', entity: 'MXP-2207', score: 84.1, tier: 'B', state: 'Expanding', conf: 0.73, res: 'Confirmed' },
+    { date: '2026-05-19', entity: 'QTZ-1103', score: 80.6, tier: 'B', state: 'Normal', conf: 0.65, res: 'Rejected' },
+    { date: '2026-05-19', entity: 'PLR-6614', score: 74.2, tier: 'Watch', state: 'Unstable', conf: 0.51, res: 'Expired' },
+  ],
+  entityFreq: [
+    { id: 'ARC-2241', count: 18 }, { id: 'VEX-0718', count: 14 }, { id: 'KPL-3302', count: 12 },
+    { id: 'NRQ-1455', count: 11 }, { id: 'DTX-0891', count: 10 }, { id: 'FRN-4410', count: 9 },
+    { id: 'MXP-2207', count: 8 }, { id: 'QTZ-1103', count: 7 }
+  ]
+};
+
+// ── NAVIGATION ──
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+}
+
+document.getElementById('mobileOverlay').addEventListener('click', closeSidebar);
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  const et = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/New_York' }).format(now);
+  document.getElementById('headerTime').textContent = et + ' ET';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── GREETING ──
+function setGreeting() {
+  const h = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })).getHours();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' });
+  let g = 'Good evening.';
+  let s = 'Systems idle.';
+  if (h < 4) { g = 'Late night.'; s = 'The system sleeps.'; }
+  else if (h < 9) { g = "Pull up a chair. The brew's fresh."; s = 'Pre-session · Warming up'; }
+  else if (h < 12) { g = "Pull up a chair. The brew's fresh."; s = 'Session active · Monitoring'; }
+  else if (h < 16) { g = 'Afternoon watch.'; s = 'Session active · Collecting'; }
+  else if (h < 18) { g = "Day's closed. Review the feed."; s = 'Post-session · Processing'; }
+  document.getElementById('greeting').textContent = g;
+  document.getElementById('greetingSub').textContent = dateStr + ' · ' + s;
+}
+setGreeting();
+
+// ── SYNTHETIC INDEX TICKERS ──
+let idxVals = { a: 5284.3, b: 2087.1, c: 18421.5 };
+function tickIndices() {
+  idxVals.a += (Math.random() - 0.48) * 2;
+  idxVals.b += (Math.random() - 0.48) * 0.8;
+  idxVals.c += (Math.random() - 0.48) * 6;
+  document.getElementById('idxA').textContent = idxVals.a.toFixed(1);
+  document.getElementById('idxB').textContent = idxVals.b.toFixed(1);
+  document.getElementById('idxC').textContent = idxVals.c.toFixed(1);
+  ['idxA','idxB','idxC'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'index-value ' + (parseFloat(el.textContent) > 0 ? '' : '');
+  });
+}
+setInterval(tickIndices, 3000);
+tickIndices();
+
+// ── RENDER INSTRUMENT CARDS ──
+function renderInstruments() {
+  const grid = document.getElementById('instrumentCards');
+  grid.innerHTML = DEMO.instruments.map(inst => `
+    <div class="instrument-card">
+      <div class="inst-header">
+        <div>
+          <div class="inst-id">${inst.id}</div>
+          <div class="inst-type">${inst.type}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="inst-score">${inst.score.toFixed(1)}</div>
+          <div class="inst-delta ${inst.delta >= 0 ? 'pos' : 'neg'}">${inst.delta >= 0 ? '+' : ''}${inst.delta.toFixed(2)}</div>
+        </div>
+      </div>
+      <div class="inst-narrative">${inst.narrative}</div>
+    </div>
+  `).join('');
+}
+renderInstruments();
+
+// ── RENDER HEATMAP ──
+function renderHeatmap() {
+  const grid = document.getElementById('heatmapGrid');
+  grid.innerHTML = DEMO.heatmap.map(h => {
+    const color = h.val > 0.5 ? 'pos' : h.val < -0.5 ? 'neg' : 'dim';
+    return `<div class="heatmap-cell"><div class="heatmap-id">${h.label}</div><div class="heatmap-val ${color}">${h.val >= 0 ? '+' : ''}${h.val.toFixed(1)}%</div></div>`;
+  }).join('');
+}
+renderHeatmap();
+
+// ── RENDER SIGNAL TABLE ──
+function renderSignals() {
+  const tbody = document.querySelector('#signalTable tbody');
+  tbody.innerHTML = DEMO.signals.map(s => {
+    const tierClass = s.tier === 'A' ? 'tag-a' : s.tier === 'B' ? 'tag-b' : 'tag-watch';
+    const resClass = s.res === 'Confirmed' ? 'tag-confirmed' : s.res === 'Rejected' ? 'tag-rejected' : s.res === 'Expired' ? 'tag-expired' : 'tag-pending';
+    return `<tr>
+      <td>${s.date}</td>
+      <td style="color:var(--brass)">${s.entity}</td>
+      <td>${s.score}</td>
+      <td><span class="tag ${tierClass}">${s.tier}</span></td>
+      <td>${s.state}</td>
+      <td class="${s.conf >= 0.75 ? 'pos' : ''}">${s.conf.toFixed(2)}</td>
+      <td><span class="tag ${resClass}">${s.res}</span></td>
+    </tr>`;
+  }).join('');
+}
+renderSignals();
+
+// ── RENDER WATERFALL CHART (SVG) ──
+function renderWaterfall() {
+  const container = document.getElementById('waterfallChart');
+  const data = [
+    { label: 'Confirmed', val: 56, color: 'var(--positive)' },
+    { label: 'Rejected', val: -34, color: 'var(--negative)' },
+    { label: 'Expired', val: -12, color: 'var(--neutral)' },
+    { label: 'Pending', val: 8, color: 'var(--brass)' }
+  ];
+  const maxVal = 60;
+  const w = 400, h = 170, barW = 60, gap = 30;
+  const startX = 40;
+  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;">`;
+  data.forEach((d, i) => {
+    const barH = Math.abs(d.val) / maxVal * 120;
+    const x = startX + i * (barW + gap);
+    const y = d.val >= 0 ? 130 - barH : 130;
+    svg += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${d.color}" rx="4" opacity="0.8"/>`;
+    svg += `<text x="${x + barW/2}" y="${y - 6}" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--text-primary)">${Math.abs(d.val)}</text>`;
+    svg += `<text x="${x + barW/2}" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--text-tertiary)" letter-spacing="0.5">${d.label}</text>`;
+  });
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+renderWaterfall();
+
+// ── RENDER TREND CHART (SVG) ──
+function renderTrend() {
+  const container = document.getElementById('trendChart');
+  const points = [58, 61, 59, 63, 60, 65, 62, 67, 64, 63, 66, 64, 68, 65, 64];
+  const w = 400, h = 170, pad = 30;
+  const xStep = (w - pad*2) / (points.length - 1);
+  const minV = 50, maxV = 75;
+  const scaleY = v => h - pad - ((v - minV) / (maxV - minV)) * (h - pad*2);
+  let path = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${pad + i*xStep} ${scaleY(p)}`).join(' ');
+  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;">`;
+  svg += `<line x1="${pad}" y1="${scaleY(64.2)}" x2="${w-pad}" y2="${scaleY(64.2)}" stroke="var(--brass-dim)" stroke-dasharray="4 4" opacity="0.5"/>`;
+  svg += `<text x="${w-pad+4}" y="${scaleY(64.2)+4}" font-family="var(--font-mono)" font-size="9" fill="var(--brass-dim)">64.2%</text>`;
+  svg += `<path d="${path}" fill="none" stroke="var(--positive)" stroke-width="2"/>`;
+  points.forEach((p, i) => {
+    svg += `<circle cx="${pad + i*xStep}" cy="${scaleY(p)}" r="3" fill="var(--positive)" opacity="0.6"/>`;
+  });
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+renderTrend();
+
+// ── RENDER SIGNAL CALENDAR ──
+function renderCalendar() {
+  const container = document.getElementById('signalCalendar');
+  let html = '';
+  for (let w = 0; w < 13; w++) {
+    html += '<div class="cal-row">';
+    for (let d = 0; d < 7; d++) {
+      if (d >= 5) { html += '<div class="cal-cell none"></div>'; continue; }
+      const r = Math.random();
+      const cls = r > 0.7 ? 'pass' : r > 0.15 ? 'pass' : 'none';
+      html += `<div class="cal-cell ${cls}" style="opacity:${0.3 + Math.random()*0.7}"></div>`;
+    }
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+renderCalendar();
+
+// ── RENDER ENTITY FREQUENCY ──
+function renderFreq() {
+  const container = document.getElementById('freqChart');
+  const maxCount = Math.max(...DEMO.entityFreq.map(e => e.count));
+  container.innerHTML = DEMO.entityFreq.map(e => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--brass);width:72px;flex-shrink:0;">${e.id}</span>
+      <div style="flex:1;height:16px;background:var(--bg-elevated);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${(e.count/maxCount)*100}%;background:var(--brass);opacity:0.6;border-radius:3px;"></div>
+      </div>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);width:24px;text-align:right;">${e.count}</span>
+    </div>
+  `).join('');
+}
+renderFreq();
+
+// ── RENDER ENERGY CHART ──
+function renderEnergyChart() {
+  const container = document.getElementById('energyChart');
+  const prices = [3.18, 3.20, 3.19, 3.22, 3.21, 3.24, 3.24];
+  const predicted = [null, null, null, null, null, 3.24, 3.26, 3.28, 3.29, 3.31, 3.30, 3.31];
+  const w = 500, h = 180, pad = 40;
+  const allVals = [...prices, ...predicted.filter(v => v !== null)];
+  const minV = Math.min(...allVals) - 0.05;
+  const maxV = Math.max(...allVals) + 0.05;
+  const xStep = (w - pad*2) / 11;
+  const scaleY = v => h - pad - ((v - minV) / (maxV - minV)) * (h - pad*2);
+  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;">`;
+  // grid lines
+  for (let v = Math.ceil(minV*20)/20; v <= maxV; v += 0.05) {
+    svg += `<line x1="${pad}" y1="${scaleY(v)}" x2="${w-pad}" y2="${scaleY(v)}" stroke="var(--border)" opacity="0.3"/>`;
+    svg += `<text x="${pad-4}" y="${scaleY(v)+4}" text-anchor="end" font-family="var(--font-mono)" font-size="9" fill="var(--text-tertiary)">$${v.toFixed(2)}</text>`;
+  }
+  // actual line
+  let actualPath = prices.map((p, i) => `${i === 0 ? 'M' : 'L'} ${pad + i*xStep} ${scaleY(p)}`).join(' ');
+  svg += `<path d="${actualPath}" fill="none" stroke="var(--text-primary)" stroke-width="2"/>`;
+  // predicted line
+  let predPts = predicted.map((p, i) => p !== null ? { x: pad + i*xStep, y: scaleY(p) } : null).filter(Boolean);
+  if (predPts.length > 1) {
+    let predPath = predPts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    svg += `<path d="${predPath}" fill="none" stroke="var(--negative)" stroke-width="2" stroke-dasharray="6 4"/>`;
+  }
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+renderEnergyChart();
+
+// ── RENDER UPTIME CALENDAR ──
+function renderUptime() {
+  const container = document.getElementById('uptimeCalendar');
+  let html = '<div style="display:flex;gap:6px;margin-bottom:8px;">';
+  html += '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);letter-spacing:1px;">M T W T F S S</span></div>';
+  for (let w = 0; w < 8; w++) {
+    html += '<div class="cal-row">';
+    for (let d = 0; d < 7; d++) {
+      const r = Math.random();
+      const cls = r > 0.08 ? 'pass' : 'fail';
+      html += `<div class="cal-cell ${cls}"></div>`;
+    }
+    html += '</div>';
+  }
+  html += '<div style="display:flex;gap:12px;margin-top:10px;">';
+  html += '<div style="display:flex;align-items:center;gap:4px;"><div class="cal-cell pass" style="width:10px;height:10px;"></div><span style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);">All pass</span></div>';
+  html += '<div style="display:flex;align-items:center;gap:4px;"><div class="cal-cell fail" style="width:10px;height:10px;"></div><span style="font-family:var(--font-mono);font-size:9px;color:var(--text-tertiary);">Has failure</span></div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+renderUptime();
+</script>
+</body>
+</html>
