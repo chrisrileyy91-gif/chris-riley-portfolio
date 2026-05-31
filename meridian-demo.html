@@ -158,6 +158,26 @@
       margin-left: var(--sidebar-width);
       margin-top: 28px;
       min-height: calc(100vh - 28px);
+      position: relative;
+    }
+    .main::before {
+      content: 'CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY';
+      position: fixed;
+      top: -50%;
+      left: 0;
+      right: -50%;
+      bottom: -50%;
+      font-family: var(--font-mono);
+      font-size: 64px;
+      font-weight: 700;
+      color: rgba(201, 165, 78, 0.03);
+      letter-spacing: 20px;
+      line-height: 180px;
+      transform: rotate(-30deg);
+      pointer-events: none;
+      z-index: 1;
+      white-space: pre-wrap;
+      word-break: break-all;
     }
     .top-header {
       position: sticky;
