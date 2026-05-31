@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prometheus — Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
+  <style>
+    :root {
+      --bg-deep:      #07070c;
+      --bg-primary:   #0a0a0f;
+      --bg-surface:   #12121c;
+      --bg-elevated:  #18182a;
+      --bg-hover:     #1e1e32;
+      --border:       #1a1a2e;
+      --border-hi:    #2a2a44;
+      --brass:        #c9a54e;
+      --brass-dim:    #8b7340;
+      --brass-glow:   rgba(201, 165, 78, 0.08);
+      --text-primary: #f0ece4;
+      --text-secondary:#7a7680;
+      --text-tertiary: #4a4654;
+      --positive:     #4caf7c;
+      --positive-dim: rgba(76, 175, 124, 0.12);
+      --negative:     #cf5c5c;
+      --negative-dim: rgba(207, 92, 92, 0.12);
+      --neutral:      #7a7680;
+      --amber:        #f9a825;
+      --blue:         #1976d2;
+      --font-serif:   'Cormorant Garamond', Georgia, serif;
+      --font-sans:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --radius:       8px;
+      --radius-lg:    12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ── DEMO BANNER ── */
+    .demo-banner {
+      position: fixed; top: 0; left: 0; right: 0; height: 28px;
+      background: linear-gradient(90deg, var(--brass-dim), var(--brass), var(--brass-dim));
+      display: flex; align-items: center; justify-content: center; z-index: 200;
+    }
+    .demo-banner span {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--bg-deep);
+    }
+
+    /* ── WATERMARK ── */
+    body::before {
+      content: 'CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY    CHRIS RILEY';
+      position: fixed; top: -50%; left: 0; right: -50%; bottom: -50%;
+      font-family: var(--font-mono); font-size: 64px; font-weight: 700;
+      color: rgba(201, 165, 78, 0.03); letter-spacing: 20px; line-height: 180px;
+      transform: rotate(-30deg); pointer-events: none; z-index: 1; white-space: pre-wrap; word-break: break-all;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 32px 48px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── HEADER ── */
+    .page-header { margin-bottom: 32px; }
+    .header-brand {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .header-orb {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ff9e40, #d84315, #6d1b00);
+      box-shadow: 0 0 16px rgba(255, 158, 64, 0.3), inset 0 0 8px rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .header-title {
+      font-family: var(--font-serif); font-size: 28px; font-weight: 600;
+      color: var(--text-primary); letter-spacing: 1px;
+    }
+    .header-sub {
+      font-family: var(--font-mono); font-size: 10px; color: var(--brass-dim);
+      letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+    }
+    .page-desc {
+      font-family: var(--font-sans); font-size: 13px; color: var(--text-secondary);
+      line-height: 1.7; max-width: 760px;
+    }
+    .back-link {
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary);
+      text-decoration: none; letter-spacing: 0.5px; margin-bottom: 20px; display: inline-block;
+    }
+    .back-link:hover { color: var(--brass); }
+
+    /* ── CONF NOTE ── */
+    .conf-note {
+      font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);
+      letter-spacing: 0.3px; padding: 12px 16px; border: 1px dashed var(--border);
+      border-radius: var(--radius); margin-bottom: 28px; line-height: 1.6;
+    }
+
+    /* ── PANELS ── */
+    .panel {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); margin-bottom: 24px; overflow: hidden;
+    }
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px 12px; border-bottom: 1px solid var(--border);
+    }
+    .panel-title { font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--text-primary); }
+    .panel-meta { font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; }
+    .panel-body { padding: 16px 20px; }
+
+    /* ── STAT CARDS ── */
+    .stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 14px; text-align: center;
+    }
+    .stat-label { font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .stat-value { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--text-primary); }
+    .stat-sub { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* ── REGIME CHIP ── */
+    .regime-chip {
+      display: inline-block; font-family: var(--font-mono); font-size: 10px;
+      font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 4px;
+    }
+    .regime-loaded { background: rgba(249,168,37,0.15); color: var(--amber); }
+    .regime-fractured { background: var(--negative-dim); color: var(--negative); }
+    .regime-cooling { background: rgba(25,118,210,0.15); color: var(--blue); }
+    .regime-flat { background: var(--positive-dim); color: var(--positive); }
+
+    /* ── SLIDER ── */
+    .slider-row {
+      display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+      background: var(--bg-elevated); border-radius: var(--radius); margin-bottom: 24px;
+    }
+    .slider-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); min-width: 180px; }
+    .slider-input {
+      flex: 1; -webkit-appearance: none; appearance: none; height: 4px;
+      background: var(--border-hi); border-radius: 2px; outline: none;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--brass); cursor: pointer;
+    }
+    .slider-reading { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--text-primary); min-width: 80px; text-align: right; }
+
+    /* ── DATA TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      font-family: var(--font-mono); font-size: 9px; color: var(--text-tertiary);
+      letter-spacing: 1.5px; text-transform: uppercase; text-align: left;
+      padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg-surface);
+    }
+    .data-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 12px; color: var(--text-primary);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--bg-elevated); }
+
+    /* ── BRIEFING ── */
+    .brief-section { margin-bottom: 16px; }
+    .brief-label {
+      font-family: var(--font-mono); font-size: 9px; color: var(--brass);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .brief-text {
+      font-family: var(--font-sans); font-size: 12px; color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── SCHEMA BLOCK ── */
+    .schema-block {
+      background: var(--bg-deep); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px 20px; font-family: var(--font-mono); font-size: 11px;
+      color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; overflow-x: auto;
+    }
+    .schema-key { color: var(--brass); }
+    .schema-type { color: var(--text-tertiary); }
+
+    /* ── TAGS ── */
+    .tag {
+      display: inline-block; font-family: var(--font-mono); font-size: 9px;
+      letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px;
+      border-radius: 4px; font-weight: 600;
+    }
+    .tag-confirmed { background: var(--positive-dim); color: var(--positive); }
+    .tag-unconfirmed { background: var(--negative-dim); color: var(--negative); }
+    .tag-pending { background: rgba(122,118,128,0.12); color: var(--neutral); }
+
+    /* ── SPLIT ── */
+    .split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+    /* ── UTILITIES ── */
+    .pos { color: var(--positive); }
+    .neg { color: var(--negative); }
+    .brass { color: var(--brass); }
+    .dim { color: var(--text-secondary); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .container > * { animation: fadeIn 0.4s ease both; }
+    .container > *:nth-child(1) { animation-delay: 0.05s; }
+    .container > *:nth-child(2) { animation-delay: 0.1s; }
+    .container > *:nth-child(3) { animation-delay: 0.15s; }
+    .container > *:nth-child(4) { animation-delay: 0.2s; }
+    .container > *:nth-child(5) { animation-delay: 0.25s; }
+    .container > *:nth-child(6) { animation-delay: 0.3s; }
+    .container > *:nth-child(7) { animation-delay: 0.35s; }
+    .container > *:nth-child(8) { animation-delay: 0.4s; }
+    .container > *:nth-child(9) { animation-delay: 0.45s; }
+    .container > *:nth-child(10) { animation-delay: 0.5s; }
+    .container > *:nth-child(11) { animation-delay: 0.55s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stat-row { grid-template-columns: repeat(3, 1fr); }
+      .split-row { grid-template-columns: 1fr; }
+      .container { padding: 60px 16px 32px; }
+    }
+    @media (max-width: 600px) {
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="demo-banner"><span>◆ Interactive Demo — Synthetic Data Only ◆</span></div>
+
+<div class="container">
+
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+
+  <div class="page-header">
+    <div class="header-brand">
+      <div class="header-orb"></div>
+      <div>
+        <div class="header-title">PROMETHEUS</div>
+        <div class="header-sub">Quantitative Research System</div>
+      </div>
+    </div>
+    <p class="page-desc">Independently-derived dispersion methodology with interactive backtesting and AI-augmented daily intelligence briefings. Schema-enforced output, empirical Bayesian confidence calibration, and self-auditing anti-hallucination logic. Runs autonomously via GitHub Actions with daily ingest from public data sources.</p>
+  </div>
+
+  <div class="conf-note">Domain abstracted for confidentiality. Architecture, methodology, and visualization shown are representative of the production system; underlying data is synthetic.</div>
+
+  <!-- ── REGIME STATUS ── -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Current Regime</div>
+      <div class="stat-value"><span class="regime-chip regime-loaded">LOADED</span></div>
+      <div class="stat-sub">Since May 22</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Term Differential</div>
+      <div class="stat-value brass">4.35</div>
+      <div class="stat-sub">Long − Short</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">P90 Threshold</div>
+      <div class="stat-value">4.51</div>
+      <div class="stat-sub">504-day rolling</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gap to Trigger</div>
+      <div class="stat-value neg">−0.16</div>
+      <div class="stat-sub">16 ticks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Confirmation Rate</div>
+      <div class="stat-value pos">35.7%</div>
+      <div class="stat-sub">5 of 14 valid</div>
+    </div>
+  </div>
+
+  <!-- ── INTERACTIVE CHART ── -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Dispersion Signal — Live Backtest</span>
+      <span class="panel-meta">Synthetic · 4-year window</span>
+    </div>
+    <div class="panel-body" style="padding:8px;">
+      <div id="plotlyChart" style="width:100%;height:520px;"></div>
+    </div>
+  </div>
+
+  <!-- ── COOLDOWN SLIDER ── -->
+  <div class="slider-row">
+    <span class="slider-label">Fracture Cooldown (days)</span>
+    <input type="range" class="slider-input" id="cooldownSlider" min="1" max="30" value="15">
+    <span class="slider-reading" id="cooldownReading">15 days</span>
+  </div>
+
+  <!-- ── FRACTURE EVENTS TABLE ── -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Fracture Events</span>
+      <span class="panel-meta" id="eventMeta">30 raw · 14 after cooldown</span>
+    </div>
+    <div class="panel-body" style="padding:0;max-height:320px;overflow-y:auto;">
+      <table class="data-table" id="fractureTable">
+        <thead><tr><th>Date</th><th>Short Disp</th><th>Long Disp</th><th>Spread</th><th>Threshold</th><th>Confirmation</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── BRIEFING + BAYESIAN SIDE BY SIDE ── -->
+  <div class="split-row">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Daily Intelligence Brief</span>
+        <span class="panel-meta">Claude Sonnet · Schema-enforced</span>
+      </div>
+      <div class="panel-body">
+        <div class="brief-section">
+          <div class="brief-label">Regime Assessment</div>
+          <div class="brief-text">Term differential at 4.35, threshold at 4.51 — 16 ticks from fracture trigger, 75 sessions since last fire. The system has been grinding toward threshold in a tight band for nine consecutive sessions. The spread trajectory is constructive: nine of the last ten observations have printed differentials above 3.00, with today reaching the highest read in the 30-session window. The spring is tightening.</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-label">Lying-Signal Audit</div>
+          <div class="brief-text">CONTAMINATION CHECK: Six negative spread readings between sessions 847–862 (worst: −1.978). These inversions fall inside the 504-day calibration window, compressing the measured distribution and artificially elevating the P90 threshold. Flag as soft contamination — not severe enough to disable the signal, but enough to treat the threshold as slightly generous. The current gap of −0.16 may be closer to true fracture territory than it appears.</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-label">Energy State</div>
+          <div class="brief-text">0.5× standard size — LOADED with one confirmed audit flag (structural inversion within calibration window). Confirmation rate is 35.7% (5 of 14 valid fractures). Sizing must reflect degraded calibration environment. Wait for threshold breach before committing resources.</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-label">What Changes the Call</div>
+          <div class="brief-text">UPGRADE to full size: spread breaches and holds above 4.51 threshold for two consecutive sessions without an active contamination flag. DOWNGRADE to stand-down: spread drops below 3.80 in the next 48 hours (coil failing), OR a new structural inversion event is detected within the calibration window.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Bayesian Confidence</span>
+        <span class="panel-meta">Empirical calibration</span>
+      </div>
+      <div class="panel-body">
+        <div class="brief-section">
+          <div class="brief-label">Prior</div>
+          <div class="brief-text">Historical confirmation rate across all valid fracture events with 15-day cooldown applied. Updated after each resolved event. Current posterior: <span class="brass" style="font-weight:600;">35.7%</span> (5 confirmed / 14 valid).</div>
+        </div>
+        <div class="brief-section">
+          <div class="brief-label">Confidence by Regime</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
+              <span class="regime-chip regime-flat">FLAT</span>
+              <span style="font-family:var(--font-mono);font-size:12px;" class="pos">N/A — no signal</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
+              <span class="regime-chip regime-loaded">LOADED</span>
+              <span style="font-family:var(--font-mono);font-size:12px;" class="brass">0.5× size · watch</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
+              <span class="regime-chip regime-fractured">FRACTURED</span>
+              <span style="font-family:var(--font-mono);font-size:12px;">1.0× · confirm direction</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+              <span class="regime-chip regime-cooling">COOLING</span>
+              <span style="font-family:var(--font-mono);font-size:12px;" class="dim">No new entries</span>
+            </div>
+          </div>
+        </div>
+        <div class="brief-section" style="margin-top:16px;">
+          <div class="brief-label">Anti-Hallucination Safeguards</div>
+          <div class="brief-text">Schema-enforced output prevents the model from omitting required fields or fabricating metrics. Every brief must include: regime classification, lying-signal audit, energy state with explicit sizing, directional vector, and what-changes-the-call conditions. Missing any field triggers a structured retry. All numerical claims are validated against the input data before output — the model cannot hallucinate a spread value or confirmation rate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCHEMA DOCUMENTATION ── -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Output Schema</span>
+      <span class="panel-meta">Enforced on every AI brief</span>
+    </div>
+    <div class="panel-body">
+      <div class="schema-block">{
+  <span class="schema-key">"regime"</span>: <span class="schema-type">string</span>     <span class="dim">// LOADED | FRACTURED-ACTIVE | COOLING | FLAT | INVERTED</span>
+  <span class="schema-key">"headline"</span>: <span class="schema-type">string</span>   <span class="dim">// One-line summary with key metrics</span>
+  <span class="schema-key">"lying_signal_audit"</span>: <span class="schema-type">string</span>  <span class="dim">// Contamination + macro + regime transition checks</span>
+  <span class="schema-key">"energy_state"</span>: <span class="schema-type">string</span> <span class="dim">// Sizing recommendation with justification</span>
+  <span class="schema-key">"directional_vector"</span>: <span class="schema-type">string</span>  <span class="dim">// NONE until confirmed by external signal</span>
+  <span class="schema-key">"trade_directive"</span>: <span class="schema-type">string</span>   <span class="dim">// Actionable instruction or WAIT</span>
+  <span class="schema-key">"what_changes_call"</span>: <span class="schema-type">string</span>  <span class="dim">// Upgrade / downgrade conditions</span>
+}</div>
+    </div>
+  </div>
+
+  <!-- ── METHODOLOGY ── -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Methodology</span>
+      <span class="panel-meta">Signal definition</span>
+    </div>
+    <div class="panel-body">
+      <div class="brief-section">
+        <div class="brief-label">The Equation</div>
+        <div style="font-family:var(--font-mono);font-size:16px;color:var(--brass);padding:12px 0;">
+          Term Differential = Dispersion<sub style="font-size:10px;">long</sub> − Dispersion<sub style="font-size:10px;">short</sub>
+        </div>
+        <div class="brief-text">Subtract the short-horizon dispersion metric from the long-horizon metric. Normally positive — far-future uncertainty exceeds near-term. When the differential gets unusually positive (short-horizon suppressed while long-horizon stays elevated), the system is in a "coiled" state. The moment the coil collapses back below threshold is the fracture event.</div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-label">Threshold Calibration</div>
+        <div class="brief-text">Rolling 504-observation (≈2-year) window. The 90th percentile of the differential distribution defines the "coiled" threshold. This is recalculated daily and adapts to regime changes in the underlying data. The cooldown parameter suppresses re-triggers: once a fracture fires, subsequent events within the cooldown window are discarded to prevent cluster noise.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════
+// PROMETHEUS DEMO — SYNTHETIC DATA ENGINE
+// Zero API calls. All data generated.
+// ════════════════════════════════════════
+
+// ── GENERATE SYNTHETIC SERIES ──
+function generateSeries() {
+  const series = [];
+  const startDate = new Date('2022-06-01');
+  let shortDisp = 28;
+  let longDisp = 31;
+
+  for (let i = 0; i < 1000; i++) {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + Math.floor(i * 7 / 5)); // skip weekends roughly
+    if (d.getDay() === 0 || d.getDay() === 6) continue;
+
+    // Random walk with mean reversion
+    shortDisp += (Math.random() - 0.5) * 1.2 + (25 - shortDisp) * 0.02;
+    longDisp += (Math.random() - 0.5) * 0.8 + (29 - longDisp) * 0.015;
+
+    // Occasional spikes
+    if (Math.random() > 0.97) shortDisp += (Math.random() - 0.5) * 6;
+    if (Math.random() > 0.98) longDisp += (Math.random() - 0.3) * 4;
+
+    shortDisp = Math.max(12, Math.min(50, shortDisp));
+    longDisp = Math.max(15, Math.min(55, longDisp));
+
+    // Ensure long > short most of the time
+    if (longDisp < shortDisp + 0.5 && Math.random() > 0.15) {
+      longDisp = shortDisp + 0.5 + Math.random() * 2;
+    }
+
+    const spread = longDisp - shortDisp;
+    series.push({
+      date: d.toISOString().split('T')[0],
+      short: parseFloat(shortDisp.toFixed(2)),
+      long: parseFloat(longDisp.toFixed(2)),
+      spread: parseFloat(spread.toFixed(4))
+    });
+  }
+
+  // Compute rolling P90 threshold
+  const windowSize = 504;
+  for (let i = 0; i < series.length; i++) {
+    if (i < windowSize) { series[i].threshold = null; series[i].isCoiled = false; series[i].isFracture = false; continue; }
+    const window = series.slice(i - windowSize, i).map(s => s.spread).sort((a, b) => a - b);
+    const p90idx = Math.floor(window.length * 0.9);
+    series[i].threshold = parseFloat(window[p90idx].toFixed(4));
+    series[i].isCoiled = series[i].spread > series[i].threshold;
+    series[i].isFracture = i > 0 && series[i - 1].isCoiled && !series[i].isCoiled;
+  }
+
+  return series;
+}
+
+const SERIES = generateSeries();
+
+// ── APPLY COOLDOWN ──
+function applyFractureCooldown(series, cooldownDays) {
+  const fractures = [];
+  let lastFractureIdx = -Infinity;
+
+  for (let i = 0; i < series.length; i++) {
+    if (series[i].isFracture && (i - lastFractureIdx) >= cooldownDays) {
+      fractures.push({ ...series[i], idx: i });
+      lastFractureIdx = i;
+    }
+  }
+
+  // Assign synthetic confirmation (roughly 35% rate)
+  fractures.forEach((f, i) => {
+    const seed = (f.short * 100 + f.long * 10 + i) % 100;
+    f.confirmed = seed < 36;
+  });
+
+  return fractures;
+}
+
+// ── RENDER PLOTLY CHART ──
+function renderChart(cooldown) {
+  const dates = SERIES.map(s => s.date);
+  const shorts = SERIES.map(s => s.short);
+  const longs = SERIES.map(s => s.long);
+  const spreads = SERIES.map(s => s.spread);
+  const thresholds = SERIES.map(s => s.threshold);
+
+  const fractures = applyFractureCooldown(SERIES, cooldown);
+  const fracDates = fractures.map(f => f.date);
+  const fracSpreads = fractures.map(f => f.spread);
+  const fracColors = fractures.map(f => f.confirmed ? '#4caf7c' : '#cf5c5c');
+  const fracLabels = fractures.map(f => f.confirmed ? 'Confirmed' : 'Unconfirmed');
+
+  const layout = {
+    paper_bgcolor: '#12121c',
+    plot_bgcolor: '#0a0a0f',
+    font: { family: 'JetBrains Mono, monospace', size: 10, color: '#7a7680' },
+    margin: { l: 50, r: 20, t: 10, b: 30 },
+    showlegend: true,
+    legend: { orientation: 'h', y: 1.02, x: 0, font: { size: 9 } },
+    xaxis: { gridcolor: '#1a1a2e', linecolor: '#1a1a2e' },
+    yaxis: { title: 'Dispersion', gridcolor: '#1a1a2e', linecolor: '#1a1a2e', domain: [0.38, 1] },
+    yaxis2: { title: 'Spread', gridcolor: '#1a1a2e', linecolor: '#1a1a2e', domain: [0, 0.32] },
+    hovermode: 'x unified'
+  };
+
+  const traces = [
+    { x: dates, y: shorts, type: 'scatter', mode: 'lines', name: 'Short Dispersion', line: { color: '#5bc0eb', width: 1.5 }, yaxis: 'y' },
+    { x: dates, y: longs, type: 'scatter', mode: 'lines', name: 'Long Dispersion', line: { color: '#c9a54e', width: 1.5 }, yaxis: 'y' },
+    { x: dates, y: spreads, type: 'scatter', mode: 'lines', name: 'Spread', line: { color: '#f0ece4', width: 1.5 }, yaxis: 'y2' },
+    { x: dates, y: thresholds, type: 'scatter', mode: 'lines', name: 'P90 Threshold', line: { color: '#cf5c5c', width: 1, dash: 'dot' }, yaxis: 'y2' },
+    { x: fracDates, y: fracSpreads, type: 'scatter', mode: 'markers', name: 'Fracture Events',
+      marker: { size: 8, color: fracColors, symbol: 'diamond', line: { color: '#f0ece4', width: 1 } },
+      text: fracLabels, yaxis: 'y2' }
+  ];
+
+  Plotly.newPlot('plotlyChart', traces, layout, { responsive: true, displayModeBar: false });
+
+  // Update table
+  renderFractureTable(fractures);
+}
+
+// ── RENDER FRACTURE TABLE ──
+function renderFractureTable(fractures) {
+  const tbody = document.querySelector('#fractureTable tbody');
+  const confirmed = fractures.filter(f => f.confirmed).length;
+  document.getElementById('eventMeta').textContent =
+    `${SERIES.filter(s => s.isFracture).length} raw · ${fractures.length} after cooldown · ${confirmed}/${fractures.length} confirmed`;
+
+  tbody.innerHTML = fractures.slice().reverse().map(f => `
+    <tr>
+      <td>${f.date}</td>
+      <td>${f.short.toFixed(2)}</td>
+      <td>${f.long.toFixed(2)}</td>
+      <td class="brass">${f.spread.toFixed(2)}</td>
+      <td>${f.threshold ? f.threshold.toFixed(2) : '—'}</td>
+      <td><span class="tag ${f.confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}">${f.confirmed ? 'Confirmed' : 'Unconfirmed'}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ── SLIDER ──
+const slider = document.getElementById('cooldownSlider');
+const reading = document.getElementById('cooldownReading');
+slider.addEventListener('input', () => {
+  const val = parseInt(slider.value);
+  reading.textContent = val + ' days';
+  renderChart(val);
+});
+
+// ── INIT ──
+renderChart(15);
+</script>
+</body>
+</html>
